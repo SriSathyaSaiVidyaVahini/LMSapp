@@ -1,9 +1,11 @@
 Build notes:
 ------------
 
-* This is based on moodleapp 4.0.2
+* This is based on moodleapp 4.1.0
 
 * Customizations are put in https://github.com/hn-88/customizedMoodleApp4changes
+and also will be added to the repo, since adding the google service json is not deemed a risk. 
+
 Files which need changes are:
 config.xml (for version, app name etc)
 google-services.json (for firebase project id etc)
