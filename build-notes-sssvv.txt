@@ -17,6 +17,7 @@ src/assets/img/login_logo.png
 src/assets/img/top_logo.png
 resources/icon.png
 resources/splash.png
+(removed the unnecessary files below)
 resources/android/icon/(lots of files, but these would probably be re-created by cordova-res)
 resources/android/splash/(lots of files, but these would probably be re-created by cordova-res)
 resources/android/xml/network_security_config.xml (for cleartextTrafficPermitted="true", not sure if this is needed now.)

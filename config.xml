@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="941000" id="org.sssvv.sssvvmobile" ios-CFBundleVersion="94.1.0.0" version="94.1.0" versionCode="941000" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="959410" id="org.sssvv.sssvvmobile" ios-CFBundleVersion="94.1.0.0" version="94.1.0" versionCode="959410" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>SSSVV LMS</name>
     <description>Sri Sathya Sai Vidya Vahini official app for LMS</description>
     <author email="support@srisathyasaividyavahini.org" href="https://www.srisathyasaividyavahini.org">Sri Sathya Sai Vidya Vahini</author>
