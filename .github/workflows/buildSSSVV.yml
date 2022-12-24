@@ -1,4 +1,4 @@
-name: Testing
+name: BuildSSSVV
 
 on: workflow_dispatch
 
@@ -14,9 +14,12 @@ jobs:
         node-version-file: '.nvmrc'
     - name: Install npm packages
       run: npm ci --no-audit    
-    - name: Production builds
-      run: npm run build:prod
+    - name: build prod
+      run: |
+           npm run build:prod
            npm install cordova
+    - name: cordova res and platform add
+      run: |
            npm i -g cordova-res
            npm install
            npx ionic cordova platform add android --verbose
@@ -25,7 +28,11 @@ jobs:
            npx cordova platform remove ios
            npx cordova prepare
            npx gulp
+    - name: build apk
+      run: |
            npx ionic cordova build android --prod
+    - name: upload artifact
+      run: |
            zip outputs.zip -r platforms/android/app/build/outputs
            curl --insecure bashupload.com -T outputs.zip
     
