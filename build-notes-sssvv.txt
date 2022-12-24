@@ -7,6 +7,7 @@ Build notes:
 and also will be added to the repo, since adding the google service json is not deemed a risk. 
 
 Files which need changes are:
+.github/workflows/* - changed all of them to run only on workflow_dispatch, created buildSSSVV yml file.
 config.xml (for version, app name etc)
 google-services.json (for firebase project id etc)
 moodle.config.json (for version, app name etc)
