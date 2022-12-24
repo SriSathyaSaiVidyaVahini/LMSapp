@@ -30,7 +30,7 @@ jobs:
            npx gulp
     - name: build apk
       run: |
-           npx ionic cordova build android --prod --release -- -- 
+           npx ionic cordova build android --prod --release -- --packageType=apk 
     - name: upload artifact
       run: |
            zip outputs.zip -r platforms/android/app/build/outputs
