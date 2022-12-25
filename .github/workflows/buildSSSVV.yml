@@ -3,6 +3,22 @@ name: BuildSSSVV
 on: workflow_dispatch
 
 jobs:
+
+  clonekey:
+    name: Clone private repo
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup SSH
+      uses: MrSquaare/ssh-setup-action@v1
+      with:
+          host: github.com
+          private-key: ${{ secrets.HLAPTOP_PRIVATE_KEY }}
+          
+    - name: Clone repository
+      run: |
+        git clone git@github.com:SriSathyaSaiVidyaVahini/LMSAppKey.git
+        
+
   build:
 
     runs-on: ubuntu-latest
@@ -19,7 +35,7 @@ jobs:
            npm run build:prod
            npm install cordova
     - name: cordova res and platform add
-      run: |
+       run: |
            npm i -g cordova-res
            npm install
            npx ionic cordova platform add android --verbose
@@ -29,8 +45,11 @@ jobs:
            npx cordova prepare
            npx gulp
     - name: build apk
+      env: |         
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PW: ${{ secrets.KEY_PW }}
       run: |
-           npx ionic cordova build android --prod --release -- -- --packageType=apk 
+           npx ionic cordova build android --prod --release -- -- --packageType=apk --keystore="~/LMSAppKey/sssvv_mobile-release-key.keystore" --storePassword=$KEY_PW --alias=$KEY_ALIAS
     - name: upload artifact
       run: |
            zip outputs.zip -r platforms/android/app/build/outputs
