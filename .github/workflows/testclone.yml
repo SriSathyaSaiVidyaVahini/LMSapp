@@ -14,4 +14,7 @@ jobs:
           private-key: ${{ secrets.HLAPTOP_PRIVATE_KEY }}
           
     - name: Clone repository
-      run: git clone git@github.com:SriSathyaSaiVidyaVahini/LMSAppKey.git
+      run: |
+        git clone git@github.com:SriSathyaSaiVidyaVahini/LMSAppKey.git
+        cd LMSAppKey
+        ls
