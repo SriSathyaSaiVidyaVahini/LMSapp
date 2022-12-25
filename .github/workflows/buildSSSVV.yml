@@ -4,22 +4,7 @@ on: workflow_dispatch
 
 jobs:
 
-  clonekeybuild:
-    name: Clone private repo
-    runs-on: ubuntu-latest
-    steps:
-    - name: Setup SSH
-      uses: MrSquaare/ssh-setup-action@v1
-      with:
-          host: github.com
-          private-key: ${{ secrets.HLAPTOP_PRIVATE_KEY }}
-          
-    - name: Clone repository
-      run: |
-        git clone git@github.com:SriSathyaSaiVidyaVahini/LMSAppKey.git
-        cd LMSAppKey
-        pwd
-        cp -v sssvv_mobile-release-key.keystore ~
+  build:
         
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
@@ -47,10 +32,8 @@ jobs:
            
     - name: build apk          
       run: |
-           npx ionic cordova build android --prod --release -- -- --packageType=apk --keystore="~/sssvv_mobile-release-key.keystore" --storePassword=$KEY_PW --alias=$KEY_ALIAS
-      env:          
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        KEY_PW: ${{ secrets.KEY_PW }}
+           npx ionic cordova build android --prod -- -- --packageType=apk
+     
         
     - name: upload artifact
       run: |
