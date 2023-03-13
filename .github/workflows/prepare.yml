@@ -1,6 +1,8 @@
 name: Prepare
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ master, main, unscheduled, integration, beta, freemium-master, freemium-main ]
 
 jobs:
   prepare:

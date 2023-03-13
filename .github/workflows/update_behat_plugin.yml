@@ -1,6 +1,6 @@
 name: Update Behat plugin
 
-on: workflow_dispatch
+on: ['push']
 
 jobs:
   update:

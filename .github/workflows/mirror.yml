@@ -1,6 +1,8 @@
 name: Mirror
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ master, main, unscheduled, integration, beta ]
 
 jobs:
   mirror:
