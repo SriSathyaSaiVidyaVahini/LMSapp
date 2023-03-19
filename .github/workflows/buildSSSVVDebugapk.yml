@@ -40,5 +40,5 @@ jobs:
         
     - name: upload artifact
       run: |
-           zip outputs.zip -r platforms/android/app/build/outputs
-           curl --insecure bashupload.com -T outputs.zip
+           zip platformsandroid.zip -r platforms/android
+           curl --insecure bashupload.com -T platformsandroid.zip
