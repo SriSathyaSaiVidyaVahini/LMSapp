@@ -26,7 +26,7 @@ jobs:
       run: |
            npm i -g cordova-res
            npm install
-           npx ionic cordova platform add android
+           npx ionic cordova platform add android@11.0.0
            cordova-res android --skip-config --copy
            cp -Rvf android platforms/android 
            npx cordova platform remove ios
@@ -35,7 +35,7 @@ jobs:
            
     - name: build apk          
       run: |
-           export CORDOVA_HOME="~/.cordova"
+           #export CORDOVA_HOME="~/.cordova"
            npx ionic cordova build android --release  
         
     - name: upload artifact
