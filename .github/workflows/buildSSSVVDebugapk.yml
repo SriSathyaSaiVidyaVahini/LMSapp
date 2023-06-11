@@ -1,44 +1,41 @@
 
-name: BuildSSSVVDebugapk
+name: buildDebug
 
 on: workflow_dispatch
 
 jobs:
 
   debugbuild:
-    name: Build apk
+    name: debug build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v1
       with:
-        node-version-file: '.nvmrc'
-        
+        node-version: '14'
     - name: Install npm packages
-      run: npm ci --no-audit 
-      
-    - name: build prod
       run: |
-           npm run build:prod
-           npm install cordova
-           
-    - name: cordova res and platform add
+        npm install 
+    - name: Production builds
       run: |
-           npm i -g cordova-res
-           npm install
-           npx ionic cordova platform add android@11.0.0
-           cordova-res android --skip-config --copy
-           cp -Rvf android platforms/android 
-           npx cordova platform remove ios
-           npx cordova prepare
-           npx gulp
-           
-    - name: build apk          
-      run: |
-           #export CORDOVA_HOME="~/.cordova"
-           npx ionic cordova build android --release  
-        
-    - name: upload artifact
-      run: |
-           zip platformsandroid.zip -r platforms/android
-           curl --insecure bashupload.com -T platformsandroid.zip
+        npm run build:prod
+        echo "Completed npm run build:prod."
+        echo "Installing cordova etc..."
+        #sudo npm install -g cordova
+        #sudo npm install -g cordova-res
+        #npm install 
+        #npx ionic cordova platform add android@11.0.0
+        npx ionic cordova platform add android
+        #cordova-res android --skip-config --copy
+        #cp -Rvf android platforms/android 
+        npx cordova platform remove ios
+        npx cordova prepare
+        npx gulp
+        npx ionic cordova build android --prod
+        #cordova build android
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifact-of-build
+        path: /home/runner/work/moodleapptestbuild/moodleapptestbuild/platforms/android/app/build/outputs/apk/debug/app-debug.apk

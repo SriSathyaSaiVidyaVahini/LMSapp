@@ -1,0 +1,34 @@
+
+name: checkEnv
+
+on: workflow_dispatch
+
+jobs:
+
+  debugbuild:
+    name: check for old version of yml
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+    - name: Install npm packages
+      run: |
+        npm install -g npm@7
+        npm install --save --save-exact --production --legacy-peer-deps
+        #npm ci --no-audit
+    - name: Production builds
+      run: |
+        npm run build:prod
+        npm install cordova
+        npm i -g cordova-res
+        npm install --production --legacy-peer-deps
+        npx ionic cordova platform add android --verbose
+        cordova-res android --skip-config --copy
+        cp -Rvf android platforms/android 
+        npx cordova platform remove ios
+        npx cordova prepare
+        npx gulp
+        npx ionic cordova build android --prod
