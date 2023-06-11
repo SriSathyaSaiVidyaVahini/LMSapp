@@ -33,7 +33,6 @@ jobs:
     - name: build prod
       run: |
            npm run build:prod
-
     - name: cordova res and platform add
       run: |
            npm i -g cordova-res
