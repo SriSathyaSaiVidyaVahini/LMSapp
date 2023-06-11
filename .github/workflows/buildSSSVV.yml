@@ -25,26 +25,26 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
       with:
-        node-version-file: '.nvmrc'
+        node-version: '14'
         
     - name: Install npm packages
-      run: npm ci --no-audit 
+      run: npm install 
       
     - name: build prod
       run: |
            npm run build:prod
-           npm install cordova
+           #npm install cordova
            
     - name: cordova res and platform add
       run: |
            npm i -g cordova-res
            npm install
-           npx ionic cordova platform add android
-           cordova-res android --skip-config --copy
-           cp -Rvf android platforms/android 
-           npx cordova platform remove ios
-           npx cordova prepare
-           npx gulp
+          npx ionic cordova platform add android
+          cordova-res android --skip-config --copy
+          cp -Rvf android platforms/android 
+          npx cordova platform remove ios
+          npx cordova prepare
+          npx gulp
            
     - name: build apk          
       run: |
@@ -53,7 +53,8 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PW: ${{ secrets.KEY_PW }}
         
-    - name: upload artifact
-      run: |
-           zip outputs.zip -r platforms/android/app/build/outputs
-           curl --insecure bashupload.com -T outputs.zip
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifact-of-build
+        path: platforms/android/app/build/outputs/

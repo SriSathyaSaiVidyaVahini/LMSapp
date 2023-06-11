@@ -38,4 +38,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: artifact-of-build
-        path: platforms/android/app/build/
+        path: platforms/android/app/build/outputs/
