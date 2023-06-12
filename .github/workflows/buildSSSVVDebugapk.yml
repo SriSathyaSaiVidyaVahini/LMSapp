@@ -23,12 +23,12 @@ jobs:
         echo "Completed npm run build:prod."
         echo "Installing cordova etc..."
         #sudo npm install -g cordova
-        #sudo npm install -g cordova-res
+        npm install -g cordova-res
         #npm install 
         #npx ionic cordova platform add android@11.0.0
         npx ionic cordova platform add android
-        #cordova-res android --skip-config --copy
-        #cp -Rvf android platforms/android 
+        cordova-res android --skip-config --copy
+        cp -Rvf android platforms/android 
         npx cordova platform remove ios
         npx cordova prepare
         npx gulp
