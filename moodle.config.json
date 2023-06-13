@@ -86,8 +86,8 @@
         "high": 120
     },
     "customurlscheme": "moodlemobile",
-    "sites": [{"key": "url", "value": "https://learning.srisathyasaividyavahini.org"},
-    {"key": "name", "value": "SSSVV LMS"}],
+    "sites": [{"url": "https://learning.srisathyasaividyavahini.org"},
+    {"name": "SSSVV LMS"}],
     "multisitesdisplay": "",
     "sitefindersettings": {},
     "onlyallowlistedsites": true,
