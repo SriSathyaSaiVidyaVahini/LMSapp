@@ -19,10 +19,9 @@ jobs:
         wget https://github.com/moodlehq/moodleapp/archive/refs/tags/v4.3.0.zip
         unzip v4.3.0.zip
         cd moodleapp-4.3.0
-        mv .* ..
-        mv * ..
+        cp -r * ..
         cd ..
-        rmdir moodleapp-4.3.0
+        rm -Rf moodleapp-4.3.0
         rm v4.3.0.zip
     - name: Install npm packages
       run: |
