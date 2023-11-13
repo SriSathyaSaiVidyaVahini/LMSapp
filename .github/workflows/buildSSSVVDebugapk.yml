@@ -23,6 +23,16 @@ jobs:
         cd ..
         rm -Rf moodleapp-4.3.0
         rm v4.3.0.zip
+    - name: Setup SSH
+      uses: MrSquaare/ssh-setup-action@v1
+      with:
+          host: github.com
+          private-key: ${{ secrets.HLAPTOP_PRIVATE_KEY }}
+    - name: get customizations
+      run: |
+        git clone git@github.com:hn-88/customizedMoodleApp4changes.git
+        cp -rv customizedMoodleApp4changes/* .
+        rm -Rf customizedMoodleApp4changes
     - name: Install npm packages
       run: |
         npm install 
