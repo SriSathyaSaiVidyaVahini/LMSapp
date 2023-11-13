@@ -1,0 +1,8 @@
+Build notes:
+------------
+
+* This is based on moodleapp 4.3.0
+
+* Customizations are put in https://github.com/hn-88/customizedMoodleApp4changes
+* The entire build is via the scripts at .github/workflows/
+

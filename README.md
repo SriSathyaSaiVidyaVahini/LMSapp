@@ -1,17 +1,6 @@
-Moodle App
-=================
+# customizedMoodleApp4changes
+Our specific customizations for SSSVV LMS - logos, icons, google services json, etc. 
 
-This is the primary repository of source code for the official mobile app for Moodle.
+Please see earlier versions for more information. 
 
-* [User documentation](https://docs.moodle.org/en/Moodle_app)
-* [Developer documentation](https://moodledev.io/general/app)
-* [Development environment setup](https://moodledev.io/general/app/development/setup)
-* [Bug Tracker](https://tracker.moodle.org/browse/MOBILE)
-* [Release Notes](https://moodledev.io/general/app_releases)
-
-This project is tested with BrowserStack.
-
-License
--------
-
-[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+The current version just pulls the Moodle app code, does the customizations and builds the app, all using the scripts in .github/workflows

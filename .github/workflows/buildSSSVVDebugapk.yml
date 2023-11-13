@@ -11,18 +11,34 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: '14'
+    - name: get moodleapp code for a particular release
+      run: |
+        wget https://github.com/moodlehq/moodleapp/archive/refs/tags/v4.3.0.zip
+        unzip v4.3.0.zip
+        cd moodleapp-4.3.0
+        mv .* ..
+        mv * ..
+        cd ..
+        rmdir moodleapp-4.3.0
+        rm v4.3.0.zip
     - name: Install npm packages
       run: |
         npm install 
-    - name: Production builds
+        npm ci --no-audit --prefix cordova-plugin-moodleapp
+    - name: npm run build prod
       run: |
         npm run build:prod
         echo "Completed npm run build:prod."
-        echo "Installing cordova etc..."
-        #sudo npm install -g cordova
+    - name: give run permissions
+      run: |
+        chmod -R +x ./*
+        echo "chmod +x for all."
+    - name: npm run prod --prefix cordova-plugin-moodleapp
+      run: |       
+        npm run prod --prefix cordova-plugin-moodleapp
         npm install -g cordova-res
         #npm install 
         #npx ionic cordova platform add android@11.0.0
