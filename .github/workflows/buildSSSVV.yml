@@ -6,7 +6,7 @@ on: workflow_dispatch
 jobs:
 
   clonekeybuild:
-    name: Clone private repo
+    name: Clone private repo and build
     runs-on: ubuntu-latest
     steps:
     - name: Setup SSH
@@ -80,7 +80,7 @@ jobs:
         KEY_PW: ${{ secrets.KEY_PW }}
         
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: artifact-of-build
         path: platforms/android/app/build/outputs/
