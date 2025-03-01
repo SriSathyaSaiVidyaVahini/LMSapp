@@ -1,0 +1,67 @@
+
+name: buildDebug
+
+on: workflow_dispatch
+
+jobs:
+
+  debugbuild:
+    name: debug build
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+    - name: get moodleapp code for a particular release
+      run: |
+        wget https://github.com/moodlehq/moodleapp/archive/refs/tags/v4.3.0.zip
+        unzip v4.3.0.zip
+        cd moodleapp-4.3.0
+        cp -r * ..
+        cd ..
+        rm -Rf moodleapp-4.3.0
+        rm v4.3.0.zip
+    - name: Setup SSH
+      uses: MrSquaare/ssh-setup-action@v1
+      with:
+          host: github.com
+          private-key: ${{ secrets.HLAPTOP_PRIVATE_KEY }}
+    - name: get customizations
+      run: |
+        git clone git@github.com:hn-88/customizedMoodleApp4changes.git
+        # we're using this just for the missing icon-background
+        cp -rv customizedMoodleApp4changes/resources/android/icon-ba* ./resources/android
+        rm -Rf customizedMoodleApp4changes
+    - name: Install npm packages
+      run: |
+        npm install 
+        npm ci --no-audit --prefix cordova-plugin-moodleapp
+    - name: npm run build prod
+      run: |
+        npm run build:prod
+        echo "Completed npm run build:prod."
+    - name: give run permissions
+      run: |
+        chmod -R +x ./*
+        echo "chmod +x for all."
+    - name: npm run prod --prefix cordova-plugin-moodleapp
+      run: |       
+        npm run prod --prefix cordova-plugin-moodleapp
+        npm install -g cordova-res
+        #npm install 
+        #npx ionic cordova platform add android@11.0.0
+        npx ionic cordova platform add android
+        cordova-res android --skip-config --copy
+        cp -Rvf android platforms/android 
+        npx cordova platform remove ios
+        npx cordova prepare
+        npx gulp
+        npx ionic cordova build android --prod
+        #cordova build android
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifact-of-build
+        path: platforms/android/app/build/outputs/
