@@ -16,13 +16,13 @@ jobs:
         node-version: '14'
     - name: get moodleapp code for a particular release
       run: |
-        wget https://github.com/moodlehq/moodleapp/archive/refs/tags/v4.3.0.zip
-        unzip v4.3.0.zip
-        cd moodleapp-4.3.0
+        wget https://github.com/moodlehq/moodleapp/archive/refs/tags/v4.5.0.zip
+        unzip v4.5.0.zip
+        cd moodleapp-4.5.0
         cp -r * ..
         cd ..
-        rm -Rf moodleapp-4.3.0
-        rm v4.3.0.zip
+        rm -Rf moodleapp-4.5.0
+        rm v4.5.0.zip
     - name: Setup SSH
       uses: MrSquaare/ssh-setup-action@v1
       with:
