@@ -6,7 +6,7 @@ on: workflow_dispatch
 jobs:
 
   debugbuild:
-    name: debug build
+    name: debug build without customizing
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
