@@ -1,5 +1,5 @@
 
-name: buildDebug
+name: buildDebugWOCust
 
 on: workflow_dispatch
 
