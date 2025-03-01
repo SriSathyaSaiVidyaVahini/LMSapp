@@ -16,13 +16,13 @@ jobs:
         node-version: '18'
     - name: get moodleapp code for a particular release
       run: |
-        wget https://github.com/moodlehq/moodleapp/archive/refs/tags/v4.5.0.zip
-        unzip v4.5.0.zip
-        cd moodleapp-4.5.0
+        git clone https://github.com/moodlehq/moodleapp.git
+        cd moodleapp
+        git switch beta
+        # switching to the beta branch
         cp -r * ..
         cd ..
-        rm -Rf moodleapp-4.5.0
-        rm v4.5.0.zip
+        rm -Rf moodleapp
     - name: Setup SSH
       uses: MrSquaare/ssh-setup-action@v1
       with:
