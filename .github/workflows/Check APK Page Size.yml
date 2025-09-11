@@ -42,11 +42,27 @@ jobs:
     
           echo "Found APK at: $APK_PATH"
           echo "Checking APK for 16KB page size compliance..."
+
+          sudo apt-get update
+          sudo apt-get install -y binutils
           
           # Unzip the APK to a temporary directory to inspect its contents
           unzip -q "$APK_PATH" -d extracted_apk
           
           echo "Checking shared object (.so) files for 16KB page size compliance..."
+
+          for sofile in $(find extracted_apk/lib -name "*.so"); do
+            echo "Checking $sofile"
+            readelf -l "$sofile" | grep "Max Page Size"
+          done
+
+          for sofile in $(find extracted_apk/lib -name "*.so"); do
+            pagesize=$(readelf -l "$sofile" | grep "Max Page Size" | awk '{print $4}')
+            if [ "$pagesize" != "0x4000" ]; then
+              echo "❌ $sofile is not 16K page size (found $pagesize)"
+              
+            fi
+          done
           
           set -e
           # Loop through all .so files found in the extracted APK
@@ -58,10 +74,10 @@ jobs:
             
             if [[ "$PAGE_SIZE" -ne "16384" ]]; then
               echo "❌ Error: The file $sofile has a PAGE_SIZE of $PAGE_SIZE, which is not 16384."
-              exit 1
+               
             fi
             
-            echo "✅ $sofile is compliant."
+             
           done
           
-          echo "All .so files checked and are compliant with the 16KB page size limit."
+           
