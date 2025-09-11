@@ -32,7 +32,10 @@ jobs:
       - name: Setup Android SDK and AAPT2
         uses: android-actions/setup-android@v3
         with:
-          aapt2-version: 2.1.0-alpha01 # Use a recent version that includes this check
+          # The 'packages' input is used to install Android SDK components, like build-tools.
+          # This will install aapt2 and other necessary tools.
+          packages: 'build-tools;34.0.0'
+          accept-android-sdk-licenses: true
     
       - name: Check APK for 16KB Page Size Limit
         id: check_page_size
