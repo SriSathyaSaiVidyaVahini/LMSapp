@@ -1,0 +1,62 @@
+name: Check APK Page Size
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # 1. Download artifact from another workflow run
+      - name: Download apk artifact ZIP (authenticated, correct headers)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -o apk_artifact.zip \
+            https://api.github.com/repos/SriSathyaSaiVidyaVahini/LMSapp/actions/artifacts/3437552163/zip
+            # https://github.com/SriSathyaSaiVidyaVahini/LMSapp/actions/runs/15989916619/artifacts/3437552163
+
+
+
+      - name: Unzip APK artifact
+        run: |
+          unzip -o apk_artifact.zip -d .
+          ls -l
+    
+      - name: Setup Android SDK and AAPT2
+        uses: android-actions/setup-android@v3
+        with:
+          aapt2-version: 2.1.0-alpha01 # Use a recent version that includes this check
+    
+      - name: Check APK for 16KB Page Size Limit
+        id: check_page_size
+        run: |
+          APK_PATH=$(find . -name "*.apk" | head -n 1)
+    
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: No APK file found."
+            exit 1
+          fi
+    
+          echo "Found APK at: $APK_PATH"
+          echo "Checking APK for 16KB page size compliance..."
+          
+          # The aapt2 dump command will list all files inside the APK and their sizes.
+          # We parse this output to find files that are not a multiple of 16384 bytes (16KB).
+          NON_COMPLIANT_FILES=$(aapt2 dump packagename "$APK_PATH" | grep -E "compressed|uncompressed" | awk '$3 !~ /^\s*0$/ && ($3 % 16384 != 0)' || true)
+    
+          if [ -z "$NON_COMPLIANT_FILES" ]; then
+            echo "✅ Success: The APK is compliant with the 16KB page size limit. No issues found."
+          else
+            echo "❌ Error: The following files are not a multiple of 16KB page size:"
+            echo "$NON_COMPLIANT_FILES"
+            echo "Please adjust your build to ensure all uncompressed files are a multiple of 16KB. More info:"
+            echo "https://developer.android.com/guide/practices/page-sizes"
+            exit 1
+          fi
