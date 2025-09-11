@@ -29,13 +29,6 @@ jobs:
           unzip -o apk_artifact.zip -d .
           ls -l
     
-      - name: Setup Android SDK and AAPT2
-        uses: android-actions/setup-android@v3
-        with:
-          # The 'packages' input is used to install Android SDK components, like build-tools.
-          # This will install aapt2 and other necessary tools.
-          packages: 'build-tools;34.0.0'
-          accept-android-sdk-licenses: true
     
       - name: Check APK for 16KB Page Size Limit
         id: check_page_size
@@ -50,16 +43,25 @@ jobs:
           echo "Found APK at: $APK_PATH"
           echo "Checking APK for 16KB page size compliance..."
           
-          # The aapt2 dump command will list all files inside the APK and their sizes.
-          # We parse this output to find files that are not a multiple of 16384 bytes (16KB).
-          NON_COMPLIANT_FILES=$(aapt2 dump packagename "$APK_PATH" | grep -E "compressed|uncompressed" | awk '$3 !~ /^\s*0$/ && ($3 % 16384 != 0)' || true)
-    
-          if [ -z "$NON_COMPLIANT_FILES" ]; then
-            echo "✅ Success: The APK is compliant with the 16KB page size limit. No issues found."
-          else
-            echo "❌ Error: The following files are not a multiple of 16KB page size:"
-            echo "$NON_COMPLIANT_FILES"
-            echo "Please adjust your build to ensure all uncompressed files are a multiple of 16KB. More info:"
-            echo "https://developer.android.com/guide/practices/page-sizes"
-            exit 1
-          fi
+          # Unzip the APK to a temporary directory to inspect its contents
+          unzip -q "$APK_PATH" -d extracted_apk
+          
+          echo "Checking shared object (.so) files for 16KB page size compliance..."
+          
+          set -e
+          # Loop through all .so files found in the extracted APK
+          for sofile in $(find extracted_apk/lib -name "*.so"); do
+            echo "Checking $sofile"
+            
+            # Use readelf to get the ELF program headers, and grep for the page size
+            PAGE_SIZE=$(readelf -l "$sofile" | grep "PAGE_SIZE" | awk '{print $NF}')
+            
+            if [[ "$PAGE_SIZE" -ne "16384" ]]; then
+              echo "❌ Error: The file $sofile has a PAGE_SIZE of $PAGE_SIZE, which is not 16384."
+              exit 1
+            fi
+            
+            echo "✅ $sofile is compliant."
+          done
+          
+          echo "All .so files checked and are compliant with the 16KB page size limit."
