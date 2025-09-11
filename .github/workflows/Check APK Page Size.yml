@@ -51,6 +51,16 @@ jobs:
           
           echo "Checking shared object (.so) files for 16KB page size compliance..."
 
+          for sofile in $(find extracted_apk/lib/arm64-v8a -name "*.so"); do
+            echo "Checking $sofile"
+            pagesize=$(readelf -l "$sofile" | grep "Max Page Size" | awk '{print $4}')
+            if [ "$pagesize" != "0x4000" ]; then
+              echo "❌ $sofile is not 16K page size (found $pagesize)"
+            else
+              echo "✅ $sofile is 16K compliant"
+            fi
+          done
+
           for sofile in $(find extracted_apk/lib -name "*.so"); do
             echo "Checking $sofile"
             readelf -l "$sofile" | grep "Max Page Size"
